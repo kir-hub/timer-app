@@ -1,52 +1,47 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
+import Input from './Input'
 import Timer from './timer'
 
 export default function TimerDashboard() {
 
     const [timers, setTimers] = useState([])
-    const [sec, setSec] = useState('')
-    const [minute, setMin] = useState('')
-    const [hour, setHour] = useState('')
-    const [day, setDay] = useState('')
-    const [month, setMonth] = useState('')
-    const [year, setYear] = useState('')
-    const [title, setTitle] = useState('')
+   
 
-    const dataDate = month+ ' '+ day + ' ' + year + ' ' + sec +':'+ minute +':'+ hour
 
-    const createTimer =()=>{
-        const newTimer = <Timer  dataDate={dataDate} deleteTimer={deleteTimer} title={title} />
-        const newTimers = [...timers, newTimer]
+
+
+    const addTimer =(value)=>{
+        const newTimer = <Timer  dataDate={value.date} deleteTimer={deleteTimer} title={value.title} />
+        const newTimers = [newTimer, ...timers ]
         setTimers(newTimers)
     }
 
+    const handleSubmit =(value)=>{
+        if(!value) return;
+        const newTimer = {component: <Timer  dataDate={value.date} deleteTimer={deleteTimer} title={value.title} />, 
+        timestamp: Date.now()}
+        const newTimers = [newTimer, ...timers ]
+        setTimers(newTimers)
 
-    const deleteTimer =(index)=>{
+    }
+
+
+    const deleteTimer =(timestamp, value)=>{
         const newTimers = [...timers]
-        newTimers.splice(index,1)
+        console.log(newTimers);
+        // newTimers.splice(index,1)
         setTimers(newTimers)
     }
 
-    const mappedTimers = timers.map((item, index) => (
-        <li key={index}> {item}</li>
-    ))
-
-
+    
     return (
         <div>
-            <input onChange={e => setDay(e.target.value)} value={day} placeholder='day'  />
-            <input onChange={e => setMonth(e.target.value)} value={month} placeholder='month' />
-            <input onChange={e => setYear(e.target.value)} value={year} placeholder='year'/>
-            <h2> ---------------------------</h2>
-            <input onChange={e => setSec(e.target.value)} value={sec} placeholder='hour'/>
-            <input onChange={e => setMin(e.target.value)} value={minute} placeholder='minutes'/>
-            <input onChange={e => setHour(e.target.value)} value={hour} placeholder='sec'/>
-            <input onChange={e => setTitle(e.target.value)} value={title} placeholder='title'/>
-
-            <button onClick={createTimer}> add timer</button>
+            <Input onAdd={handleSubmit}/>
 
             <ul>
-                {mappedTimers}
+                {timers.map((item) => (
+        <li key={item.timestamp}> {item.component}</li>
+    ))}
             </ul>
         </div>
     )

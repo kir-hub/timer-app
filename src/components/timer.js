@@ -11,7 +11,7 @@ export default function Timer(props) {
     const [warning, setWarning] = useState(false)
 
 
-    const removeTimer =(index)=>{
+    const removeTimer =()=>{
         return deleteTimer(index)
     }
 
@@ -44,8 +44,8 @@ export default function Timer(props) {
         }, 1000)
     }
 
+    timerStart()
     useEffect(() =>{
-        timerStart()
         return ()=>{
             clearInterval(interval.current)
         }
@@ -53,7 +53,7 @@ export default function Timer(props) {
 
     return (
         <div>
-            <h1 onClick={() =>removeTimer(index)}>X</h1>
+            <h1 onClick={removeTimer}>X</h1>
             <div>
                 {title} {warning && ' near by'}
             </div>
